@@ -1,23 +1,21 @@
 pipeline {
     agent any
     environment {
-        // REPLACE with your actual Docker Hub ID
-        DOCKER_HUB_USER = 'your-docker-id' 
+        DOCKER_HUB_USER = 'preethiksha' 
     }
     stages {
         stage('Build Image') {
             steps {
-                // Use 'bat' instead of 'sh' for Windows
-                bat "docker build -t preethiksha/oms-app:latest ."
+                bat "docker build -t %DOCKER_HUB_USER%/oms-app:latest ."
             }
         }
         stage('Push to Docker Hub') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'docker-hub-creds', 
                                  passwordVariable: 'PASS', usernameVariable: 'USER')]) {
-                    // Windows requires double quotes for variable expansion in batch
-                    bat "docker login -u preethiksha -p Namashiva@01"
-                    bat "docker push preethiksha/oms-app:latest"
+                    // This uses the credentials safely
+                    bat "docker login -u %USER% -p %PASS%"
+                    bat "docker push %DOCKER_HUB_USER%/oms-app:latest"
                 }
             }
         }
